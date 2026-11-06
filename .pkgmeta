@@ -1,0 +1,16 @@
+# CurseForge automatic packaging. See docs/CURSEFORGE.md.
+# The zip must contain a folder named exactly like the TOC file, otherwise the game
+# does not load it. Without package-as the folder would be named after the CurseForge slug.
+package-as: ForeverJourney
+
+manual-changelog:
+    filename: CHANGELOG.md
+    markup-type: markdown
+
+# Files and folders starting with a dot (.git, .claude, .pkgmeta) are left out automatically.
+ignore:
+    - AGENTS.md
+    - DESCRIPTION.md
+    - README.md
+    - assets
+    - docs

@@ -1,0 +1,49 @@
+## Interface: 16001
+## Title: Forever Journey
+## Notes: Your character's story: where you've been, what you've accomplished and what you could do next.
+## Author: Jesper
+## Version: @project-version@
+## IconTexture: Interface\Icons\INV_Misc_Book_07
+## SavedVariables: ForeverJourneyDB
+## SavedVariablesPerCharacter: ForeverJourneyCharDB
+## AddonCompartmentFunc: ForeverJourney_OnAddonCompartmentClick
+## OptionalDeps: ForeverDungeonJournal
+
+Core\Init.lua
+Core\Events.lua
+Core\Database.lua
+Data\Bosses.lua
+Data\Zones.lua
+Core\Timeline.lua
+Trackers\Session.lua
+Trackers\Character.lua
+Trackers\Zones.lua
+Trackers\Quests.lua
+Trackers\Lifetime.lua
+Trackers\Combat.lua
+Trackers\Dungeons.lua
+Trackers\Items.lua
+Trackers\Social.lua
+Trackers\Companions.lua
+Trackers\Gear.lua
+Trackers\ZoneQuests.lua
+Trackers\Moments.lua
+Core\Stats.lua
+Core\Suggestions.lua
+Core\Badges.lua
+UI\Theme.lua
+UI\Widgets.lua
+UI\Toast.lua
+UI\Minimap.lua
+UI\MainFrame.lua
+UI\MapPins.lua
+UI\MapPins.xml
+UI\Pages\Dashboard.lua
+UI\Pages\Journey.lua
+UI\Pages\World.lua
+UI\Pages\Statistics.lua
+UI\Pages\Almanac.lua
+UI\Pages\Characters.lua
+UI\Pages\Next.lua
+UI\Pages\Wrapped.lua
+Core\Slash.lua

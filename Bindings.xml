@@ -1,0 +1,5 @@
+<Bindings>
+    <Binding name="FOREVERJOURNEY_TOGGLE" category="ADDONS" header="FOREVERJOURNEY">
+        if ForeverJourney and ForeverJourney.UI then ForeverJourney.UI:Toggle() end
+    </Binding>
+</Bindings>
