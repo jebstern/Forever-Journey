@@ -77,3 +77,7 @@ Outside the window:
 
 Install BugSack + BugGrabber, reproduce, and paste the error together with the output of
 `/journey probe`. See `docs/ARCHITECTURE.md` for the design and the data model.
+
+## License
+
+MIT, see `LICENSE`.

@@ -3,6 +3,8 @@
 ## Notes: Your character's story: where you've been, what you've accomplished and what you could do next.
 ## Author: Jesper
 ## Version: @project-version@
+## X-Curse-Project-ID: 1786557
+## X-License: MIT
 ## IconTexture: Interface\Icons\INV_Misc_Book_07
 ## SavedVariables: ForeverJourneyDB
 ## SavedVariablesPerCharacter: ForeverJourneyCharDB

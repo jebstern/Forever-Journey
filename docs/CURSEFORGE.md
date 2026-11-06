@@ -10,6 +10,8 @@ and the `## Notes` line in `ForeverJourney.toc`.
 | Project name | Forever Journey - Adventure Journal |
 | Project slug | `forever-journey-adventure-journal` |
 | In-game title and folder | Forever Journey, `ForeverJourney` (unchanged) |
+| Project ID | 1786557 (also `## X-Curse-Project-ID` in the TOC) |
+| License | MIT (`LICENSE`, shipped inside the zip) |
 | Third-party distribution | Allowed |
 
 The plain name "Forever Journey" was already taken on CurseForge, so the project name carries
@@ -31,7 +33,7 @@ What the repository provides:
 * `ForeverJourney.toc` has `## Version: @project-version@`, which the packager replaces with
   the tag name. `Core/Init.lua` strips a leading `v` and shows `dev` when running from source.
 * The game version comes from `## Interface: 16001`, the same way other Forever addons on
-  CurseForge do it.
+  CurseForge do it. Verified with v0.1.0: CurseForge labelled the file game version 1.60.1.
 
 One-time setup (done by hand, needs the CurseForge account):
 
@@ -41,8 +43,8 @@ One-time setup (done by hand, needs the CurseForge account):
 3. On GitHub open the repository Settings, then Webhooks, then "Add webhook". Payload URL:
    `https://www.curseforge.com/api/projects/<projectID>/package?token=<token>`.
    Leave every other setting at its default. Treat this URL as a secret.
-4. Optional: put the Project ID in the TOC as `## X-Curse-Project-ID: <projectID>`, so addon
-   managers can match an installed copy to the CurseForge project.
+4. The Project ID is in the TOC as `## X-Curse-Project-ID`, so addon managers can match an
+   installed copy to the CurseForge project.
 
 ## Releasing a version
 
