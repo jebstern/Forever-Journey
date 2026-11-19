@@ -95,4 +95,4 @@ setup and the steps).
 
 `/journey` toggle, `/journey wrapped|journey|world|stats|next`, `/journey probe`,
 `/journey statdump`, `/journey buffs`, `/journey campbuff <name>`, `/journey minimap`,
-`/journey scale <n>`, `/journey deaths`, `/journey played`, `/journey reset`, `/journey debug`.
+`/journey scale <n>`, `/journey bannerscale <n>`, `/journey deaths`, `/journey played`, `/journey reset`, `/journey debug`.

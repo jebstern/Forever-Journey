@@ -87,6 +87,7 @@ local function Help()
     P("  /journey recaps - toggle level-up and welcome-back recaps in chat")
     P("  /journey toasts | banner | deathline | runrecap - toggle banners and chat lines")
     P("  /journey toast - show a test banner so you can drag it into place")
+    P("  /journey bannerscale <0.5-2> - banner scale")
     P("  /journey badges - list earned and remaining badges")
     P("  /journey zonequests - status of the QuestieDB quest totals per zone")
     P("  /journey buffs - list your current buffs (to confirm the camping buff name)")
@@ -158,6 +159,14 @@ SlashCmdList.FOREVERJOURNEY = function(msg)
         FJ.Print(s.toasts and "Chapter banners are on." or "Chapter banners are off.")
     elseif cmd == "toast" then
         FJ.Toast:Test()
+    elseif cmd == "bannerscale" or cmd == "toastscale" then
+        local v = tonumber(rest)
+        if v and v >= 0.5 and v <= 2 then
+            FJ.Toast:SetScale(v)
+            FJ.Print("Banner scale set to " .. v)
+        else
+            FJ.Print("Usage: /journey bannerscale 0.5-2 (now " .. (FJ.gdb.settings.toastScale or 1) .. ")")
+        end
     elseif cmd == "banner" then
         local s = FJ.gdb.settings
         s.zoneBanner = not s.zoneBanner

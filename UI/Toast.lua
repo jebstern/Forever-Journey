@@ -12,6 +12,19 @@ local function SavePosition()
     FJ.gdb.settings.toastPos = { point = point, relPoint = relPoint, x = x, y = y }
 end
 
+-- Anchor offsets are in the banner's own scaled units, so the default is divided by the scale.
+local function ApplyLayout()
+    local s = FJ.gdb.settings
+    local scale, pos = s.toastScale or 1, s.toastPos
+    frame:SetScale(scale)
+    frame:ClearAllPoints()
+    if pos and pos.point then
+        frame:SetPoint(pos.point, UIParent, pos.relPoint or pos.point, pos.x or 0, pos.y or 0)
+    else
+        frame:SetPoint("TOP", UIParent, "TOP", 0, -140 / scale)
+    end
+end
+
 local function Build()
     frame = W.Frame(UIParent, WIDTH, HEIGHT, T.colors.bg, T.colors.border)
     frame:SetFrameStrata("HIGH")
@@ -24,12 +37,7 @@ local function Build()
         self:StopMovingOrSizing()
         SavePosition()
     end)
-    local pos = FJ.gdb.settings.toastPos
-    if pos and pos.point then
-        frame:SetPoint(pos.point, UIParent, pos.relPoint or pos.point, pos.x or 0, pos.y or 0)
-    else
-        frame:SetPoint("TOP", UIParent, "TOP", 0, -140)
-    end
+    ApplyLayout()
     frame:Hide()
 
     frame.accent = frame:CreateTexture(nil, "ARTWORK")
@@ -109,6 +117,18 @@ function Toast:Next()
     if opts.sound ~= false then
         FJ.API.PlaySound(opts.sound or "IG_QUEST_LIST_COMPLETE", 878)
     end
+end
+
+-- Rescales the banner and keeps it where it was dragged, then previews it.
+function Toast:SetScale(v)
+    local s = FJ.gdb.settings
+    local old, pos = s.toastScale or 1, s.toastPos
+    if pos and pos.point then
+        pos.x, pos.y = (pos.x or 0) * old / v, (pos.y or 0) * old / v
+    end
+    s.toastScale = v
+    if frame then ApplyLayout() end
+    if not showing then self:Test() end
 end
 
 function Toast:Test()

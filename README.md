@@ -36,7 +36,8 @@ Outside the window:
 
 * **Banners** - a small banner for new chapters, badges and personal bests; a "Back in
   Westfall" memory banner when you return to a zone; a dungeon run recap in chat and banner.
-  Drag the banner where you like with `/journey toast`. Toggles: `/journey toasts`,
+  Drag the banner where you like with `/journey toast`, resize it with
+  `/journey bannerscale 1.3`. Toggles: `/journey toasts`,
   `/journey banner`, `/journey runrecap`, `/journey deathline`.
 
 * **World Map** - tombstones where you died (hover for the killer) and footprints on the
@@ -60,11 +61,12 @@ Outside the window:
 
 ## Commands
 
-```
+```text
 /journey                 open or close
 /journey wrapped         open Forever Wrapped
 /journey minimap         show or hide the minimap button
 /journey scale 0.9       window scale (0.6 to 1.5)
+/journey bannerscale 1.3 banner scale (0.5 to 2)
 /journey deaths          show or hide single deaths on the timeline
 /journey probe           print client capabilities for a bug report
 /journey statdump        save the game's full statistics list to SavedVariables

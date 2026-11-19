@@ -86,6 +86,7 @@ local GLOBAL_DEFAULTS = {
         toasts = true,
         toastMinPriority = 45,
         toastPos = {},
+        toastScale = 1,
         zoneBanner = true,
         deathLine = true,
         runRecap = true,

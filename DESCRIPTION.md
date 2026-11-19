@@ -88,6 +88,7 @@ Everything is stored locally in your SavedVariables. Nothing is sent anywhere.
 /journey wrapped         open Forever Wrapped
 /journey minimap         show or hide the minimap button
 /journey scale 0.9       window scale (0.6 to 1.5)
+/journey bannerscale 1.3 banner scale (0.5 to 2)
 /journey deaths          show or hide single deaths on the timeline
 /journey map             toggle world map tombstones and footprints
 /journey toasts          toggle banners

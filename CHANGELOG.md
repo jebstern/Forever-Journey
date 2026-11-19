@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.1
+
+* New command `/journey bannerscale <0.5-2>` to resize the banner independently of the window.
+  The banner stays where you dragged it.
+
 ## 0.1.0
 
 First public release.
