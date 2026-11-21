@@ -24,6 +24,16 @@ local function SavePosition()
     FJ.gdb.settings.window = { point = point, relPoint = relPoint, x = x, y = y }
 end
 
+local function ApplyPosition()
+    local pos = FJ.gdb.settings.window
+    frame:ClearAllPoints()
+    if pos and pos.point then
+        frame:SetPoint(pos.point, UIParent, pos.relPoint or pos.point, pos.x or 0, pos.y or 0)
+    else
+        frame:SetPoint("CENTER")
+    end
+end
+
 function UI:Build()
     if frame then return frame end
     frame = W.Frame(UIParent, WIDTH, HEIGHT, T.colors.bg, T.colors.border)
@@ -39,12 +49,7 @@ function UI:Build()
         self:StopMovingOrSizing()
         SavePosition()
     end)
-    local pos = FJ.gdb.settings.window
-    if pos and pos.point then
-        frame:SetPoint(pos.point, UIParent, pos.relPoint or pos.point, pos.x or 0, pos.y or 0)
-    else
-        frame:SetPoint("CENTER")
-    end
+    ApplyPosition()
     frame:SetScale(FJ.gdb.settings.scale or 1)
     frame:Hide()
     frame:SetScript("OnShow", function() FJ.API.PlaySound("IG_MAINMENU_OPEN", 850) end)
@@ -70,12 +75,36 @@ function UI:Build()
     frame.tagline = W.Text(header, 11, "your character's story", T.colors.dim)
     frame.tagline:SetPoint("LEFT", frame.title, "RIGHT", 12, -2)
     frame.charLine = W.Text(header, 12, "", T.colors.text)
-    frame.charLine:SetPoint("RIGHT", -40, 0)
+    frame.charLine:SetPoint("RIGHT", -64, 0)
     frame.charLine:SetJustifyH("RIGHT")
 
     local close = CreateFrame("Button", nil, header, "UIPanelCloseButton")
     close:SetPoint("TOPRIGHT", 2, 2)
     close:SetScript("OnClick", function() UI:Hide() end)
+
+    -- Settings cog next to the close button: grey until hovered or while Settings is open.
+    local cog = CreateFrame("Button", nil, header)
+    cog:SetSize(22, 22)
+    cog:SetPoint("RIGHT", close, "LEFT", 2, 0)
+    cog.icon = W.Icon(cog, 18, T.icons.settings)
+    cog.icon:SetPoint("CENTER")
+    function cog:SetSelected(sel)
+        self.selected = sel
+        self.icon:SetDesaturated(not sel)
+        self.icon:SetAlpha(sel and 1 or 0.7)
+    end
+    cog:SetScript("OnEnter", function(self)
+        self.icon:SetDesaturated(false)
+        self.icon:SetAlpha(1)
+        W.ShowTooltip(self, "Settings", "Banners, chat lines, map pins, window and banner size.", "ANCHOR_BOTTOMLEFT")
+    end)
+    cog:SetScript("OnLeave", function(self)
+        self:SetSelected(self.selected)
+        GameTooltip:Hide()
+    end)
+    cog:SetScript("OnClick", function() UI:ToggleSettings() end)
+    cog:SetSelected(false)
+    frame.cog = cog
 
     -- Sidebar
     local side = CreateFrame("Frame", nil, frame)
@@ -157,11 +186,42 @@ function UI:ShowPage(key)
         local prev = self.pages[self.current]
         if prev and prev.frame then prev.frame:Hide() end
         if frame.nav[self.current] then frame.nav[self.current]:SetSelected(false) end
+        self.previous = self.current
     end
     self.current = def.key
     def.frame:Show()
     if frame.nav[def.key] then frame.nav[def.key]:SetSelected(true) end
+    frame.cog:SetSelected(def.key == "settings")
     self:Refresh()
+end
+
+-- The cog: opens Settings, or goes back to the page you came from when Settings is open.
+function UI:ToggleSettings()
+    if self:IsShown() and self.current == "settings" then
+        local back = (self.previous and self.previous ~= "settings") and self.previous or self.pageOrder[1].key
+        self:ShowPage(back)
+    else
+        self:Show("settings")
+    end
+end
+
+-- Rescales the window and keeps it where it was dragged (offsets are in its own scaled units).
+function UI:SetScale(v)
+    local s = FJ.gdb.settings
+    local old, pos = s.scale or 1, s.window
+    if pos and pos.point then
+        pos.x, pos.y = (pos.x or 0) * old / v, (pos.y or 0) * old / v
+    end
+    s.scale = v
+    if frame then
+        frame:SetScale(v)
+        ApplyPosition()
+    end
+end
+
+function UI:ResetPosition()
+    FJ.gdb.settings.window = {}
+    if frame then ApplyPosition() end
 end
 
 function UI:Refresh()

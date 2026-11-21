@@ -49,6 +49,7 @@ local function ShowTooltip(self)
     GameTooltip:AddLine(" ")
     GameTooltip:AddLine("Left-click: open your journey", 0.6, 0.6, 0.6)
     GameTooltip:AddLine("Right-click: Forever Wrapped", 0.6, 0.6, 0.6)
+    GameTooltip:AddLine("Shift-click: settings", 0.6, 0.6, 0.6)
     GameTooltip:AddLine("Drag to move", 0.6, 0.6, 0.6)
     GameTooltip:Show()
 end
@@ -83,7 +84,9 @@ function M:Create()
     button:SetHighlightTexture("Interface\\Minimap\\UI-Minimap-ZoomButton-Highlight")
 
     button:SetScript("OnClick", function(_, mouseButton)
-        if mouseButton == "RightButton" then
+        if IsShiftKeyDown and IsShiftKeyDown() then
+            FJ.UI:Toggle("settings")
+        elseif mouseButton == "RightButton" then
             FJ.UI:Toggle("wrapped")
         else
             FJ.UI:Toggle()

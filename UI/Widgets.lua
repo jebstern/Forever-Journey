@@ -353,6 +353,157 @@ function W.Row(parent, h)
 end
 
 ---------------------------------------------------------------------------
+-- Settings controls. Each is one row of width w with a label on the left and an optional
+-- tooltip; the caller writes the value with :SetChecked / :SetValue and gets changes back
+-- through onChange(newValue).
+---------------------------------------------------------------------------
+local function ClickSound(on)
+    FJ.API.PlaySound(on and "IG_MAINMENU_OPTION_CHECKBOX_ON" or "IG_MAINMENU_OPTION_CHECKBOX_OFF", on and 856 or 857)
+end
+
+-- Label plus an invisible hover area over it (up to rightInset from the right) for the tooltip.
+local function RowLabel(f, label, tip, rightInset)
+    f.label = W.Text(f, 12, label, T.colors.text)
+    f.label:SetPoint("LEFT", 4, 0)
+    f.label:SetPoint("RIGHT", f, "RIGHT", -rightInset - 6, 0)
+    f.label:SetWordWrap(false)
+    if tip then
+        local hit = CreateFrame("Frame", nil, f)
+        hit:SetPoint("TOPLEFT")
+        hit:SetPoint("BOTTOMRIGHT", f, "BOTTOMRIGHT", -rightInset, 0)
+        W.SetTooltip(hit, label, tip)
+    end
+end
+
+local function ButtonTooltip(b, title, tip)
+    b:HookScript("OnEnter", function(self) W.ShowTooltip(self, title, tip) end)
+    b:HookScript("OnLeave", function() GameTooltip:Hide() end)
+end
+W.ButtonTooltip = ButtonTooltip
+
+function W.Toggle(parent, w, label, tip, onChange)
+    local b = CreateFrame("Button", nil, parent)
+    b:SetSize(w, 24)
+    b.bg = b:CreateTexture(nil, "BACKGROUND")
+    b.bg:SetAllPoints()
+    SetColor(b.bg, T.colors.panelHi, 0)
+    b.box = W.Frame(b, 16, 16, T.colors.track, T.colors.border)
+    b.box:SetPoint("LEFT", 4, 0)
+    b.check = b.box:CreateTexture(nil, "OVERLAY")
+    b.check:SetTexture("Interface\\Buttons\\UI-CheckBox-Check")
+    b.check:SetSize(22, 22)
+    b.check:SetPoint("CENTER", 1, 1)
+    b.label = W.Text(b, 12, label, T.colors.text)
+    b.label:SetPoint("LEFT", b.box, "RIGHT", 8, 0)
+    b.label:SetPoint("RIGHT", -4, 0)
+    b.label:SetWordWrap(false)
+    b:SetScript("OnEnter", function(self)
+        SetColor(self.bg, T.colors.panelHi, 1)
+        if tip then W.ShowTooltip(self, label, tip) end
+    end)
+    b:SetScript("OnLeave", function(self)
+        SetColor(self.bg, T.colors.panelHi, 0)
+        GameTooltip:Hide()
+    end)
+    function b:SetChecked(v)
+        self.checked = v and true or false
+        if self.checked then self.check:Show() else self.check:Hide() end
+    end
+    b:SetScript("OnClick", function(self)
+        self:SetChecked(not self.checked)
+        ClickSound(self.checked)
+        if onChange then onChange(self.checked) end
+    end)
+    b:SetChecked(false)
+    return b
+end
+
+-- opts: min, max, step, format(v) -> display string
+function W.Stepper(parent, w, label, tip, opts, onChange)
+    local f = CreateFrame("Frame", nil, parent)
+    f:SetSize(w, 24)
+    RowLabel(f, label, tip, 112)
+    f.plus = W.FlatButton(f, "+", 24, 20)
+    f.plus:SetPoint("RIGHT", -4, 0)
+    f.valueText = W.Text(f, 12, "", T.colors.text)
+    f.valueText:SetWidth(52)
+    f.valueText:SetJustifyH("CENTER")
+    f.valueText:SetPoint("RIGHT", f.plus, "LEFT", -4, 0)
+    f.minus = W.FlatButton(f, "-", 24, 20)
+    f.minus:SetPoint("RIGHT", f.valueText, "LEFT", -4, 0)
+    function f:SetValue(v)
+        v = FJ.Clamp(tonumber(v) or opts.min, opts.min, opts.max)
+        self.value = v
+        self.valueText:SetText(opts.format and opts.format(v) or tostring(v))
+        self.minus.text:SetTextColor(T.RGB(v <= opts.min + 0.001 and T.colors.dim or T.colors.text))
+        self.plus.text:SetTextColor(T.RGB(v >= opts.max - 0.001 and T.colors.dim or T.colors.text))
+    end
+    local function Nudge(dir)
+        local v = FJ.Clamp(FJ.Round((f.value or opts.min) + dir * opts.step, 2), opts.min, opts.max)
+        if math.abs(v - (f.value or 0)) < 0.001 then return end
+        f:SetValue(v)
+        ClickSound(true)
+        if onChange then onChange(v) end
+    end
+    f.minus:SetScript("OnClick", function() Nudge(-1) end)
+    f.plus:SetScript("OnClick", function() Nudge(1) end)
+    return f
+end
+
+-- options: { { value, text, tooltip }, ... } drawn as a row of segment buttons on the right.
+function W.Choice(parent, w, label, tip, options, onChange)
+    local f = CreateFrame("Frame", nil, parent)
+    f:SetSize(w, 24)
+    local bw, gap = 58, 2
+    local used = #options * bw + (#options - 1) * gap + 4
+    RowLabel(f, label, tip, used)
+    f.buttons = {}
+    for i, o in ipairs(options) do
+        local b = W.FlatButton(f, o[2], bw, 20)
+        b:SetPoint("RIGHT", -(4 + (#options - i) * (bw + gap)), 0)
+        b.value = o[1]
+        if o[3] then ButtonTooltip(b, o[2], o[3]) end
+        b:SetScript("OnClick", function(self)
+            if f.value == self.value then return end
+            f:SetValue(self.value)
+            ClickSound(true)
+            if onChange then onChange(self.value) end
+        end)
+        f.buttons[i] = b
+    end
+    function f:SetValue(v)
+        self.value = v
+        for _, b in ipairs(self.buttons) do b:SetSelected(b.value == v) end
+    end
+    return f
+end
+
+-- A single-line edit box in a flat frame; box.edit is the EditBox. Escape and hiding drop focus,
+-- so a closed window never keeps the keyboard.
+function W.EditBox(parent, w, h)
+    local box = W.Frame(parent, w, h or 22, T.colors.track, T.colors.borderDim)
+    local e = CreateFrame("EditBox", nil, box)
+    e:SetPoint("TOPLEFT", 6, 0)
+    e:SetPoint("BOTTOMRIGHT", -6, 0)
+    e:SetAutoFocus(false)
+    e:SetMaxLetters(64)
+    T.ApplyFont(e, 12, "")
+    e:SetTextColor(T.RGB(T.colors.text))
+    e:SetScript("OnEscapePressed", function(self) self:ClearFocus() end)
+    e:SetScript("OnEditFocusGained", function(self)
+        box:SetBorderColor(T.colors.goldDim)
+        self:HighlightText()
+    end)
+    e:SetScript("OnEditFocusLost", function(self)
+        box:SetBorderColor(T.colors.borderDim)
+        self:HighlightText(0, 0)
+    end)
+    box:SetScript("OnHide", function() e:ClearFocus() end)
+    box.edit = e
+    return box
+end
+
+---------------------------------------------------------------------------
 -- Horizontal bars (label | bar | value)
 ---------------------------------------------------------------------------
 function W.HBars(parent, w, rowH)

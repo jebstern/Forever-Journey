@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased
+
+* New Settings page with every option in one place: banners, chat lines, World Map pins,
+  window and banner size, the camping buff and erasing a character's data. Open it with the
+  cog next to the close button, the sidebar, `/journey settings`, Shift-click on the minimap
+  button, or Options > AddOns > Forever Journey.
+* Choose which chapters get a banner: all, most (default) or only the major ones.
+* `/journey help` lists every command, grouped. An unknown command says so before the list.
+* Changing the window scale keeps the window where you dragged it.
+
 ## 0.1.1
 
 * New command `/journey bannerscale <0.5-2>` to resize the banner independently of the window.

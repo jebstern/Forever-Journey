@@ -34,7 +34,8 @@ UI/        Theme, Widgets (all hand-built; W.ShowCopyBox / W.MakeCopyable for cl
            Minimap, MainFrame (window + page registry),
            MapPins.lua + MapPins.xml (World Map data providers and pin templates; the only XML in the addon),
            Pages/ Dashboard, Journey (timeline), World (zones), Statistics (charts), Almanac (all numbers,
-           from Stats:Almanac()), Characters (account roster + totals), Next (suggestions), Wrapped (summary)
+           from Stats:Almanac()), Characters (account roster + totals), Next (suggestions), Wrapped (summary),
+           Settings (every option as cards; the same cards are registered under Options > AddOns)
 
 Internal messages worth knowing: FJ_DATA_CHANGED (debounced UI refresh), FJ_TICK (15 s heartbeat, dt),
 FJ_TIMELINE_ADDED (entry), FJ_ZONE_CHANGED (mapID, name, isInstance), FJ_RUN_STARTED/FJ_RUN_ENDED (run, valid),
@@ -54,7 +55,8 @@ Conventions:
   saves. One-time data fixes go into `FJ:MigrateDB()` behind a `flags.*` marker.
 * UI: pages register with `FJ.UI:RegisterPage(key, {title, icon, order, build, refresh})`, build
   lazily, and must tolerate empty data. Use `FJ.Widgets` (frames, text, cards, bars, charts,
-  scroll area, donut, timeline row). Only `UIPanelButtonTemplate` and `UIPanelCloseButton` from
+  scroll area, donut, timeline row, and Toggle/Stepper/Choice/EditBox for settings). A new option
+  goes into `CARDS` in `UI/Pages/Settings.lua` as well as its slash command. Only `UIPanelButtonTemplate` and `UIPanelCloseButton` from
   Blizzard. Fonts via `FJ.Theme.ApplyFont`; colours from `FJ.Theme.colors`.
 * Text: no em-dashes in user-facing strings, say "since recording began" for our counters.
 * Lua 5.1: no `goto`, no integer division, `#` only on arrays without holes, always pass a
@@ -93,6 +95,6 @@ setup and the steps).
 
 ## Commands worth knowing
 
-`/journey` toggle, `/journey wrapped|journey|world|stats|next`, `/journey probe`,
+`/journey` toggle, `/journey help`, `/journey settings`, `/journey wrapped|journey|world|stats|next`, `/journey probe`,
 `/journey statdump`, `/journey buffs`, `/journey campbuff <name>`, `/journey minimap`,
 `/journey scale <n>`, `/journey bannerscale <n>`, `/journey deaths`, `/journey played`, `/journey reset`, `/journey debug`.

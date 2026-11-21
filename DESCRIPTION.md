@@ -63,7 +63,8 @@ lists them all.
   23 quests, 412 kills, 3 deaths.") and a welcome-back line at login with "a week ago today"
   chapters.
 
-Every banner and chat line can be switched off individually.
+Every banner and chat line can be switched off individually on the Settings page: click the cog
+at the top of the window, Shift-click the minimap button, or go to Options > AddOns > Forever Journey.
 
 ## Works well with
 
@@ -85,6 +86,8 @@ Everything is stored locally in your SavedVariables. Nothing is sent anywhere.
 
 ```text
 /journey                 open or close
+/journey help            list every command
+/journey settings        open the Settings page
 /journey wrapped         open Forever Wrapped
 /journey minimap         show or hide the minimap button
 /journey scale 0.9       window scale (0.6 to 1.5)

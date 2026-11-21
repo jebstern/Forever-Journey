@@ -72,27 +72,37 @@ local function Probe()
 end
 
 local function Help()
-    local P = FJ.Print
-    P("Commands:")
-    P("  /journey - open or close your journey")
-    P("  /journey wrapped | journey | world | stats | next - open a page")
-    P("  /journey minimap - show or hide the minimap button")
-    P("  /journey scale <0.6-1.5> - window scale")
-    P("  /journey deaths - show or hide single deaths on the timeline")
-    P("  /journey played - toggle hiding the chat line of our own /played requests")
-    P("  /journey probe - print client capabilities (useful for bug reports)")
-    P("  /journey statdump - save the game's full statistics list to SavedVariables")
-    P("  /journey almanac | characters - open those pages")
-    P("  /journey map - show or hide tombstones and footprints on the World Map")
-    P("  /journey recaps - toggle level-up and welcome-back recaps in chat")
-    P("  /journey toasts | banner | deathline | runrecap - toggle banners and chat lines")
-    P("  /journey toast - show a test banner so you can drag it into place")
-    P("  /journey bannerscale <0.5-2> - banner scale")
-    P("  /journey badges - list earned and remaining badges")
-    P("  /journey zonequests - status of the QuestieDB quest totals per zone")
-    P("  /journey buffs - list your current buffs (to confirm the camping buff name)")
-    P("  /journey campbuff <name> - set the buff name that counts as camping")
-    P("  /journey reset - erase this character's data")
+    local function head(text) print("|cffffd200" .. text .. "|r") end
+    local function line(cmd, desc)
+        print("  |cffffffff/journey" .. (cmd ~= "" and (" " .. cmd) or "") .. "|r - " .. desc)
+    end
+    FJ.Print("Commands. Every option is also on the Settings page, behind the cog at the top of the window.")
+    head("Open")
+    line("", "open or close the journal")
+    line("settings", "all options in one place")
+    line("dashboard | journey | world | stats | almanac | characters | next | wrapped", "open a page")
+    line("help", "this list")
+    head("Options")
+    line("minimap", "show or hide the minimap button")
+    line("scale <0.6-1.5>", "window scale")
+    line("toasts", "chapter banners on or off")
+    line("banner", "zone memory banners on or off")
+    line("runrecap", "dungeon run recaps on or off")
+    line("deathline", "the line after a death on or off")
+    line("toast", "show a test banner so you can drag it into place")
+    line("bannerscale <0.5-2>", "banner scale")
+    line("recaps", "level-up and welcome-back recaps in chat on or off")
+    line("deaths", "single deaths on the timeline on or off")
+    line("map", "World Map tombstones and footprints on or off")
+    line("played", "hide or show the journal's own /played checks in chat")
+    line("campbuff <name>", "the buff that counts as camping")
+    head("Tools")
+    line("badges", "list earned and remaining badges")
+    line("buffs", "list your current buffs (to find the camping buff name)")
+    line("zonequests", "status of the Questie quest totals per zone")
+    line("probe", "print client capabilities for a bug report")
+    line("statdump", "save the game's full statistics list to SavedVariables")
+    line("reset", "erase this character's data")
 end
 
 SlashCmdList.FOREVERJOURNEY = function(msg)
@@ -101,6 +111,10 @@ SlashCmdList.FOREVERJOURNEY = function(msg)
     local cmd, rest = msg:match("^(%S*)%s*(.-)$")
     if cmd == "" or cmd == "show" or cmd == "toggle" then
         FJ.UI:Toggle()
+    elseif cmd == "help" or cmd == "?" or cmd == "commands" then
+        Help()
+    elseif cmd == "settings" or cmd == "options" or cmd == "config" then
+        FJ.UI:Show("settings")
     elseif cmd == "wrapped" then
         FJ.UI:Toggle("wrapped")
     elseif cmd == "journey" or cmd == "timeline" then
@@ -120,8 +134,7 @@ SlashCmdList.FOREVERJOURNEY = function(msg)
     elseif cmd == "scale" then
         local v = tonumber(rest)
         if v and v >= 0.6 and v <= 1.5 then
-            FJ.gdb.settings.scale = v
-            if _G.ForeverJourneyFrame then _G.ForeverJourneyFrame:SetScale(v) end
+            FJ.UI:SetScale(v)
             FJ.Print("Window scale set to " .. v)
         else
             FJ.Print("Usage: /journey scale 0.6-1.5")
@@ -207,6 +220,9 @@ SlashCmdList.FOREVERJOURNEY = function(msg)
         FJ.debug = not FJ.debug
         FJ.Print("Debug output " .. (FJ.debug and "on" or "off"))
     else
+        FJ.Print("Unknown command \"" .. cmd .. "\".")
         Help()
     end
+    -- A toggle typed while the Settings page is open should show up there at once.
+    if FJ.UI:IsShown() and FJ.UI.current == "settings" then FJ.UI:Refresh() end
 end

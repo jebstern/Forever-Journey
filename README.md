@@ -6,6 +6,10 @@ It is not a game database; it is the story of *your* character.
 
 Open it with `/journey`, the minimap button, or a keybinding (Options > Keybindings > Forever Journey).
 
+Every option is on the **Settings** page: the cog at the top of the window, the sidebar,
+`/journey settings`, Shift-click on the minimap button, or Options > AddOns > Forever Journey.
+Settings are shared by every character on the account.
+
 ## Pages
 
 * **Dashboard** - level and XP, /played, eight headline numbers, recent chapters, this session, professions.
@@ -63,6 +67,8 @@ Outside the window:
 
 ```text
 /journey                 open or close
+/journey help            list every command
+/journey settings        open the Settings page
 /journey wrapped         open Forever Wrapped
 /journey minimap         show or hide the minimap button
 /journey scale 0.9       window scale (0.6 to 1.5)

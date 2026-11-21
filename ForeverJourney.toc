@@ -48,4 +48,5 @@ UI\Pages\Almanac.lua
 UI\Pages\Characters.lua
 UI\Pages\Next.lua
 UI\Pages\Wrapped.lua
+UI\Pages\Settings.lua
 Core\Slash.lua

@@ -131,6 +131,13 @@ function Toast:SetScale(v)
     if not showing then self:Test() end
 end
 
+-- Puts the banner back at its default spot near the top of the screen, then previews it.
+function Toast:ResetPosition()
+    FJ.gdb.settings.toastPos = {}
+    if frame then ApplyLayout() end
+    if not showing then self:Test() end
+end
+
 function Toast:Test()
     self:Show({ kicker = "NEW CHAPTER", title = "This is what a chapter looks like", text = "Drag me to where you want banners to appear.", icon = T.icons.journey })
 end

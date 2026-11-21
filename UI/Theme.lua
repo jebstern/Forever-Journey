@@ -66,6 +66,8 @@ T.icons = {
     rares = "Interface\\Icons\\Ability_Hunter_SniperShot",
     epics = "Interface\\Icons\\INV_Misc_Gem_01",
     ghost = "Interface\\Icons\\Spell_Shadow_RaiseDead",
+    settings = "Interface\\Icons\\INV_Misc_Gear_01",
+    camp = "Interface\\Icons\\Spell_Fire_Fire",
 }
 
 ---------------------------------------------------------------------------

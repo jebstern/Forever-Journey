@@ -177,7 +177,7 @@ function Session:RecordStart()
     })
     if not FJ.gdb.settings.welcomeShown then
         FJ.gdb.settings.welcomeShown = true
-        FJ.Print("Recording your journey from here on. Type |cffffffff/journey|r to open your story.")
+        FJ.Print("Recording your journey from here on. Type |cffffffff/journey|r to open your story, or |cffffffff/journey help|r for every command.")
     end
 end
 
