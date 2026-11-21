@@ -19,6 +19,8 @@ From the moment you install it, Forever Journey quietly keeps track of:
   your fastest clear of each dungeon.
 * **Gold**: earned and spent, by source and purpose, over time.
 * **Professions**: skill-ups and caps, your first ride, hearthstone homes over time.
+* **Things you made**: every item you craft, cook, smelt or conjure, counted per item
+  ("Heavy Dynamite: 2,031").
 * **Companions**: who you grouped with, how often and for how long.
 * **Little things**: emotes, hugs, jumps, distance travelled, camping, sitting by the fire.
 

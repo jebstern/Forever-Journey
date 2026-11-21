@@ -131,6 +131,15 @@ local function Build(def, page)
     page.compEmpty:SetWidth(chartW)
     page.compEmpty:SetWordWrap(true)
 
+    page.cardCount = 19
+    page.madeCard = card(19, "Things you made", T.icons.crafted)
+    page.madeBars = W.HBars(page.madeCard.content, chartW, 21)
+    page.madeBars:SetPoint("TOPLEFT", 0, -2)
+    page.madeEmpty = W.Text(page.madeCard.content, 11, "Everything you craft, cook, smelt or conjure from now on is counted here.", T.colors.dim)
+    page.madeEmpty:SetPoint("TOPLEFT", 2, -6)
+    page.madeEmpty:SetWidth(chartW)
+    page.madeEmpty:SetWordWrap(true)
+
     page.scroll:SetContentHeight(math.ceil(page.cardCount / 2) * (CARD_H + GAP))
 end
 
@@ -373,6 +382,24 @@ local function Refresh(def, page)
     page.compBars:SetData(compRows, { labelWidth = 120, valueWidth = 70 })
     if #compRows == 0 then page.compEmpty:Show() else page.compEmpty:Hide() end
     page.compCard:SetSubtitle(FJ.Companions:Count() > 0 and format("%d people, %s together", FJ.Companions:Count(), FJ.FormatDuration(t.groupTime or 0)) or "")
+
+    -- Things you made
+    local made = S:Crafted()
+    local madeRows = {}
+    for i, c in ipairs(made) do
+        if i > 7 then break end
+        local hex = c.link and c.link:match("|c(%x%x%x%x%x%x%x%x)")
+        madeRows[#madeRows + 1] = {
+            label = c.name, value = c.n, text = FJ.FormatNumber(c.n),
+            icon = FJ.API.GetItemIcon(c.id),
+            color = ((c.quality or 1) >= 2 and hex) and W.HexToRGB(hex) or T.colors.goldDim,
+            tipTitle = c.name,
+            tip = { { "Made", FJ.FormatNumber(c.n) }, { "First made", FJ.FormatDate(c.first) }, { "Last made", FJ.RelativeDay(c.last) }, "Since recording began." },
+        }
+    end
+    page.madeBars:SetData(madeRows, { labelWidth = 130, valueWidth = 60, icons = true })
+    if #madeRows == 0 then page.madeEmpty:Show() else page.madeEmpty:Hide() end
+    page.madeCard:SetSubtitle(#made > 0 and format("%s items, %d %s", FJ.FormatNumber(t.crafted or 0), #made, #made == 1 and "kind" or "kinds") or "")
 
     -- Records
     page.recRows:ReleaseAll()

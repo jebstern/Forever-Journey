@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+* Things you made: every item you craft, cook, smelt or conjure is counted per item
+  ("Heavy Dynamite: 2,031"). The top items are on the Statistics page, the full list is in the
+  Almanac, the item you made most is in Wrapped, and every 100, 500, 1,000 (and so on) items
+  made becomes a chapter. Counts start when you install this version.
+
 ## 0.2.0
 
 * New Settings page with every option in one place: banners, chat lines, World Map pins,

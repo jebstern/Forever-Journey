@@ -200,6 +200,27 @@ function Stats:Professions()
     return out
 end
 
+-- Things you made, most first: { id, name, link, n, first, last, quality }.
+function Stats:Crafted(limit)
+    local out = {}
+    for id, c in pairs(db().crafted or {}) do
+        local link = c.l
+        out[#out + 1] = {
+            id = id, link = link, n = c.n or 0, first = c.first, last = c.last,
+            name = (link and link:match("|h%[(.-)%]|h")) or ("item " .. id),
+            quality = FJ.Items:Quality(link),
+        }
+    end
+    table.sort(out, function(a, b)
+        if a.n ~= b.n then return a.n > b.n end
+        return a.name < b.name
+    end)
+    if limit then
+        for i = #out, limit + 1, -1 do out[i] = nil end
+    end
+    return out
+end
+
 function Stats:Records()
     local d = db()
     local out = {}
@@ -583,6 +604,24 @@ function Stats:Almanac()
     add("Talent respecs", N(V("respecs")))
     add("Factions encountered", N(V("factions")))
     add("Factions at Honored or better", N(V("mostHonored")))
+
+    -- Things you made
+    local made = self:Crafted()
+    if #made > 0 then
+        add = section("Things you made", icons.crafted)
+        add("Items made", N(t.crafted), "crafted, cooked, smelted or conjured, since recording began")
+        add("Different items", N(#made))
+        local SHOWN = 30
+        for i, c in ipairs(made) do
+            if i > SHOWN then break end
+            add(c.name, N(c.n), "first made " .. FJ.FormatDate(c.first))
+        end
+        if #made > SHOWN then
+            local rest = 0
+            for i = SHOWN + 1, #made do rest = rest + made[i].n end
+            add(format("%d other items", #made - SHOWN), N(rest))
+        end
+    end
 
     -- Consumables
     add = section("Consumables", "Interface\\Icons\\INV_Potion_54")

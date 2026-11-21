@@ -1,4 +1,4 @@
--- Forever Journey: notable loot (rare quality and above).
+-- Forever Journey: notable loot (rare quality and above) and the things you made.
 local ADDON_NAME, FJ = ...
 local Items = FJ:NewModule("Items")
 
@@ -20,6 +20,49 @@ local function BuildPatterns()
     end
 end
 
+-- "You create: [item]x2." and "You create: [item]." (multiple first, or the single form would
+-- swallow the count). Crafting, cooking, smelting and conjuring all print these.
+local createdPatterns
+local function BuildCreatedPatterns()
+    createdPatterns = {}
+    for _, g in ipairs({ "LOOT_ITEM_CREATED_SELF_MULTIPLE", "LOOT_ITEM_CREATED_SELF" }) do
+        local p = FJ.FormatToPattern(_G[g])
+        if p then createdPatterns[#createdPatterns + 1] = p end
+    end
+end
+
+local CRAFT_MILESTONES = { 100, 500, 1000, 2500, 5000, 10000, 25000, 50000 }
+
+function Items:Quality(link)
+    local hex = type(link) == "string" and link:match("|c%x%x(%x%x%x%x%x%x)")
+    return hex and QUALITY_BY_HEX[hex:lower()]
+end
+
+function Items:RecordCreated(link, count)
+    local id = tonumber(link:match("|Hitem:(%d+)"))
+    if not id then return end
+    count = math.max(1, math.floor(tonumber(count) or 1))
+    local db = FJ.db
+    local now = time()
+    local c = db.crafted[id]
+    if not c then
+        c = { n = 0, first = now }
+        db.crafted[id] = c
+    end
+    c.n = c.n + count
+    c.l = link
+    c.last = now
+    local t = db.totals
+    local before = t.crafted or 0
+    t.crafted = before + count
+    for _, m in ipairs(CRAFT_MILESTONES) do
+        if before < m and t.crafted >= m then
+            FJ.Timeline:Add("crafted", FJ.Timeline.PRIO.crafted, { a = m })
+        end
+    end
+    FJ:NotifyDataChanged()
+end
+
 local rollPatterns
 local function BuildRollPatterns()
     rollPatterns = {}
@@ -34,11 +77,20 @@ function Items:OnLoot(msg)
     if not msg:find("|Hitem:", 1, true) then return end
     if not patterns then BuildPatterns() end
     if not rollPatterns then BuildRollPatterns() end
+    if not createdPatterns then BuildCreatedPatterns() end
     for i = 1, #rollPatterns do
         if msg:match(rollPatterns[i]) then
             FJ.db.totals.rollsWon = (FJ.db.totals.rollsWon or 0) + 1
             FJ:NotifyDataChanged()
             return
+        end
+    end
+    -- Counted for "Things you made", then still checked below as notable loot (a crafted epic).
+    for i = 1, #createdPatterns do
+        local made, count = msg:match(createdPatterns[i])
+        if made and made:find("|Hitem:", 1, true) then
+            self:RecordCreated(made, count)
+            break
         end
     end
     local link
@@ -68,6 +120,7 @@ end
 
 function Items:OnInit()
     BuildPatterns()
+    BuildCreatedPatterns()
 end
 
 FJ:RegisterEvent("CHAT_MSG_LOOT", function(_, msg) Items:OnLoot(msg) end)

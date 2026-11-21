@@ -130,6 +130,10 @@ local function BuildFacts(s)
     if epics > 0 or n("legendaries") > 0 then
         add("Epic items", tostring(epics), n("legendaries") > 0 and (n("legendaries") .. " legendary") or nil)
     end
+    local made = FJ.Stats:Crafted(1)[1]
+    if made then
+        add("Made the most", made.name, format("%s of them, %s items made in all", FJ.FormatNumber(made.n), FJ.FormatNumber(FJ.db.totals.crafted or 0)))
+    end
     local emotes = FJ.Social:EmoteList()
     if emotes[1] then
         local total = 0

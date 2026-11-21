@@ -37,6 +37,7 @@ local CHAR_DEFAULTS = {
         dungeonRuns = 0, dungeonsCompleted = 0, bossKills = 0,
         raresSeen = 0,
         lootRare = 0, lootEpic = 0,
+        crafted = 0,        -- items made (crafted, cooked, smelted, conjured) since install
         ghostTime = 0,
         emotes = 0,
         campCount = 0, campTime = 0, campLongest = 0,
@@ -51,6 +52,7 @@ local CHAR_DEFAULTS = {
     companions = {},  -- [name] = { time, n, first, last, class }
     gear = {},        -- [slot] = { id, link, since (played seconds), t }
     gearHistory = {}, -- [itemID] = { link, worn (played seconds), first, slot }
+    crafted = {},     -- [itemID] = { n = items made, l = link, first, last }
     homes = {},       -- list of { name, t, lvl }
     zoneQuests = {},  -- [uiMapID] = { t = total, d = done, u = unobtainable } from QuestieDB
     levels = {},

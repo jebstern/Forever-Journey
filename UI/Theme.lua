@@ -68,6 +68,7 @@ T.icons = {
     ghost = "Interface\\Icons\\Spell_Shadow_RaiseDead",
     settings = "Interface\\Icons\\INV_Misc_Gear_01",
     camp = "Interface\\Icons\\Spell_Fire_Fire",
+    crafted = "Interface\\Icons\\Trade_BlackSmithing",
 }
 
 ---------------------------------------------------------------------------

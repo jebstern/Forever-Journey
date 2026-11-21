@@ -52,6 +52,8 @@ Outside the window:
 * **Companions** - who you grouped with, how often and for how long (Statistics and Almanac).
 * **Gear and home** - the item you have worn the longest, average item level per level, your
   hearthstone homes over time, your first ride.
+* **Things you made** - every item you craft, cook, smelt or conjure, counted per item
+  ("Heavy Dynamite: 2,031"): top items on the Statistics page, the full list in the Almanac.
 * **Zone completion** - with Questie installed, quests completed per zone on the World page
   ("Westfall 28 / 61"), computed from QuestieDB in the background without hitching.
 

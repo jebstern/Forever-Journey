@@ -25,7 +25,7 @@ ForeverJourney.toc      load order matters: Core/Init -> Events -> Database -> D
 Core/      Init (namespace, utils, compat), Events (one frame, pcall-guarded), Database (schema, caps, migrations),
            Timeline (milestones), Stats (read-only derivations), Suggestions ("Next" page), Slash (commands, /journey probe)
 Data/      Bosses (NPC IDs, dungeon catalogue), Zones (level hints, capitals, exploration overlay totals)
-Trackers/  Session, Character (level/XP/gold/professions), Zones, Quests, Lifetime (GetStatistic), Combat, Dungeons, Items,
+Trackers/  Session, Character (level/XP/gold/professions), Zones, Quests, Lifetime (GetStatistic), Combat, Dungeons, Items (notable loot, things you made),
            Social (emotes/sit/camp), Companions (group members), Gear (equipment, homes, riding),
            ZoneQuests (quest completion per zone from QuestieDB, coroutine-built),
            Moments (chapter toasts, zone banners, run recaps, death line; all via internal messages)

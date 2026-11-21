@@ -15,7 +15,7 @@ Timeline.PRIO = {
     death = 20, death_ms = 50,
     item_epic = 70, item = 40,
     rare = 35,
-    played = 60, kills = 50, gold = 55,
+    played = 60, kills = 50, gold = 55, crafted = 50,
 }
 
 local ICONS = {
@@ -38,6 +38,7 @@ local ICONS = {
     rare = "Interface\\Icons\\Ability_Hunter_SniperShot",
     played = "Interface\\Icons\\INV_Misc_PocketWatch_01",
     kills = "Interface\\Icons\\Ability_Warrior_Cleave",
+    crafted = "Interface\\Icons\\Trade_BlackSmithing",
     gold = "Interface\\Icons\\INV_Misc_Coin_02",
     camp = "Interface\\Icons\\Spell_Fire_Fire",
     group = "Interface\\Icons\\Spell_Holy_PrayerOfHealing02",
@@ -56,7 +57,7 @@ local COLORS = {
     prof = "ff9ad66b", prof_ms = "ff9ad66b",
     taxi = "ff8fd3d3", quest_first = "fff0d089", quests = "fff0d089",
     death = "ffff6060", death_ms = "ffff6060",
-    item = "ffa335ee", rare = "ffff9f40", played = "ffcfcfcf", kills = "ffd9a066", gold = "ffffd700",
+    item = "ffa335ee", rare = "ffff9f40", played = "ffcfcfcf", kills = "ffd9a066", gold = "ffffd700", crafted = "ffc8a26b",
     camp = "ffff9a4d", group = "ff7fd4ff", home = "ff9ad66b", gear = "ffa335ee", ride = "ff8fd3d3",
     badge = "ffffd200", pb = "ffb48cff", note = "fff0d089",
 }
@@ -199,6 +200,9 @@ function Timeline:Describe(e)
         sub = format("Level %d", e.l or 0)
     elseif k == "kills" then
         title = format("%s enemies slain", FJ.FormatNumber(e.a or 0))
+        sub = format("Level %d, in %s", e.l or 0, Zone(e))
+    elseif k == "crafted" then
+        title = format("%s items made", FJ.FormatNumber(e.a or 0))
         sub = format("Level %d, in %s", e.l or 0, Zone(e))
     elseif k == "gold" then
         title = "Earned " .. FJ.FormatMoney((e.a or 0) * 10000, true) .. " in total"
