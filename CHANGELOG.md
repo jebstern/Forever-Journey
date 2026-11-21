@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.3.0
 
 * Things you made: every item you craft, cook, smelt or conjure is counted per item
   ("Heavy Dynamite: 2,031"). The top items are on the Statistics page, the full list is in the
