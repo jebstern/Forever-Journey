@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.2.0
 
 * New Settings page with every option in one place: banners, chat lines, World Map pins,
   window and banner size, the camping buff and erasing a character's data. Open it with the
